@@ -1,34 +1,36 @@
 import React ,{useState} from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import yelp from '../api/yelp';
+import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import SearchBar from '../components/SearchBar';
+import useResults from '../hooks/useResults';
+import ResultsList from '../components/ResultsList';
 
-
-
-const SearchScreen = (props) => {
+const SearchScreen = () => {
     const [term, setTerm]=useState('');
-    const [results, setResults]=useState([]);
+    const [searchApi, results, errorMessage]=useResults();
 
-    const searchApi =async () =>{
-        const response =await yelp.get('/search',{
-            params:{
-                term,
-                limit: 50,
-                location: 'san jose'
-            }
-        });
-        setResults(response.data.businesses);
-    }
+    const filterResultsByPrice = (price) =>{
+        
+        return results.filter( result => {
+            return result.price === price;
+        })
+    };
 
     return (
-        <View>
+        // <View style={{flex:1}}>
+        <>
             <SearchBar  
                 term={term} 
                 onTermChange={(newTerm) => setTerm(newTerm)}
-                onTermSubmit={() => searchApi()}
+                onTermSubmit={() => searchApi(term)}
             />
-            <Text style={styles.text} >SearchScreen {term} {results.length}</Text>
-        </View>
+            {errorMessage? <Text>{errorMessage}</Text>:null}
+            <ScrollView>
+                <ResultsList results={filterResultsByPrice('$')} title="Cost Effective" />
+                <ResultsList results={filterResultsByPrice('$$')} title="Big Pricier" />
+                <ResultsList results={filterResultsByPrice('$$$')} title="Big Spender" />
+            </ScrollView>
+        </>
+        //</View>
     );
 };
 
