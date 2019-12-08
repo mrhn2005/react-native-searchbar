@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "exmulti",
+    "name": "searchrestaurant",
     "slug": "exmulti",
     "privacy": "public",
     "sdkVersion": "33.0.0",
@@ -25,6 +25,9 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.searchrestauranty.searchrestaurant"
     }
   }
 }
